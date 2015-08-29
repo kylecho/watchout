@@ -39,7 +39,6 @@ d3.select('svg').selectAll('image')
 
 // find all our images
 function move(element) {
-  debugger;
   element.transition()
     // over duration
     .duration(3000)
