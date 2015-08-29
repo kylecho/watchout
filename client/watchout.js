@@ -12,19 +12,6 @@ var canvas = d3.select('body').append('svg')
   .append('g')
   .attr("transform","translate(32,"+height / 2+")");
 
-// d3.select('svg').append("image")
-//   .attr("x",40)
-//   .attr("y",40)
-//   .attr("width",40)
-//   .attr("height",40)
-//   .attr("xlink:href","asteroid.png")
-//   .style('border', "10px solid red");
-
-// d3.select('body').selectAll('svg').append('circle')
-//   .attr('cx',200)
-//   .attr('cy',200)
-//   .attr('r',40);
-
 // generate enemies
 var enemies = [];
 for (var i = 0; i < numEnemies; i++) {
@@ -43,12 +30,6 @@ d3.select('svg').selectAll('circle')
   .attr('cy', function(d){ return d.y })
   .attr('r', function(d){ return d.size });
 
-// Enemy.prototype.moveToLocation = function(newX, newY) {
-//   this.x = newX;
-//   this.y = newY;
-// }
-
-debugger;
 // find all our circles
 function moveEnemies() {
 d3.select('svg').selectAll('circle')
