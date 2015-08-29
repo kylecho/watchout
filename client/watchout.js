@@ -4,9 +4,9 @@ var highScore = 0;
 var currScore = 0;
 var numCollisions = 0;
 var lastCollision = Date.now();
-var width = 960;
-var height = 500;
-const numEnemies = 50;
+var width = window.innerWidth * 0.8;
+var height = window.innerHeight * 0.8;
+const numEnemies = 80;
 
 // make a canvas
 var canvas = d3.select('body').append('svg')
@@ -43,14 +43,14 @@ d3.select('svg').selectAll('circle')
   .duration(3000)
   // to new location
   .attr('cx',function(d) { 
-    d.x = Math.random() * (width - 50) + 10;;
+    d.x = Math.random() * (width - 10) + 10;;
     return d.x;
   })
     // the attr command is ALREADY making a loop
     // it's basically saying, 
     // for each circle, set the cs attribute to [value]
   .attr('cy',function(d) {
-    d.y = Math.random() * (height - 50) + 10;
+    d.y = Math.random() * (height - 10) + 10;
     return d.y;
   });
 }
@@ -80,16 +80,26 @@ function checkCollision() {
     var circx = d3.select(this).attr('cx');
     var circy = d3.select(this).attr('cy');
     if (Math.sqrt(Math.pow(midx-circx,2)+Math.pow(midy-circy,2)) <= 25) {
-      if (Date.now() - lastCollision > 1000) {
+      if (Date.now() - lastCollision > 500) {
         numCollisions++;
         lastCollision = Date.now();
+        d3.select('svg')
+          .transition()
+          .duration(250)
+          .style('background-color','red')
+          .each("end", function(d) {
+            d3.select(this)
+            .transition()
+            .duration(250)
+            .style('background-color', 'black');
+          }); // good d3 practice: it changes the bg color and changes back to its original color!
       }
       if (currScore > highScore) {
         highScore = currScore;
         d3.select('div.high').select('span').data([highScore])
           .text(highScore);
       }
-      currScore = 0; 
+      currScore = 0;
     }    
   });
 
