@@ -35,92 +35,30 @@ d3.select('svg').selectAll('image')
   .attr('y', function(d){ return d.y })
   .attr('width', function(d) { return d.size; })
   .attr('height', function(d) { return d.size; })
-  .attr('xlink:href', '../images/Shuriken.png')
-  // .attr('r', function(d){ return d.size })
-  ;
+  .attr('xlink:href', '../images/Shuriken.png');
 
 // find all our images
-function moveEnemies() {
-  d3.select('svg').selectAll('image')
-    // call transition
-    .transition()
-    // over one second
+function move(element) {
+  debugger;
+  element.transition()
+    // over duration
     .duration(3000)
     // to new location
-    .attrTween('x', function(d,i,a) { 
-      //var endResult = Math.random() * (width - 10) + 10;
+    .attr('x', function(d,i) {
       d.x = Math.random() * (width - 10) + 10;
-      
-      // We are now returning a FUNCTION
-      // which will be executed over and over and over
-      // return d3.interpolate(a, d.x);
-
-      // Now we can EDIT that function to have the side effect of updating our position
-
-      // somewhere, somehow, attrTween is executing our function
-      // We want to execute it in the same manner
-      // It was called with a context
-      // It was called with parameters
-      // We want to execute it with the same context, and same parameters, and then return its result
-
-      // ALL WE WANT TO DO is return that interpolate function
-      // But also save the value for x that it generates
-
-      // somewhere, something in attrtween/transition is going 
-      // return d3.interpolate(a, d.x);
-
-      return function() {
-        // call this function, save it in a result, and then update
-        var fn = d3.interpolate(a, d.x);
-        var result = fn.apply(this, arguments);
-        d.attrx = result;
-        // d.x = result;
-        // debugger;
-        return result;
-      }
-
-      // The attrTween is going to run the function over and over
-      // attrTween takes care of executing interpolation function and resetting x over and over
-      // 
+      return d.x;
     })
-      // the attr command is ALREADY making a loop
-      // it's basically saying, 
-      // for each image, set the cs attribute to [value]
-    .attrTween('y',function(d,i,a) {
+    .attr('y',function(d,i) {
       d.y = Math.random() * (height - 10) + 10;
-      /*return d.y;*/
-      return function() {
-        // call this function, save it in a result, and then update
-        var fn = d3.interpolate(a, d.y);
-        var result = fn.apply(this, arguments);
-        d.attry = result;
-        // d.x = result;
-        // debugger;
-        return result;
-      }      
+      return d.y;
     })
-    // .attrTween("transform", function(d, i, a) {
-    //   d.angle = d.angle + 720;
-    //   a = null;
-    //   return function() {
-    //     debugger;
-    //     // a the second time through is the WHOLE ROTATE STRING, not the angle
-    //     var temp_result = d3.interpolate(a, d.angle).apply(this, arguments);
-    //     return "rotate("+temp_result+" "+(Number(d.attrx)+.5*d.size)+" "+(Number(d.attry)+.5*d.size)+")";
-    //   }
-    // })
+    .each("end", function(){
+      move( d3.select(this) );
+    });
 }
-// transform:rotate(50deg);
+move(d3.select('svg').selectAll('image'));
 
-// when they first move the thingy, AAAAAH THEY'RE COMING
-setInterval(moveEnemies, 3000);
-
-// run a function every, say, hundredth of a second or whatever
-// check if anything is touching the player
-// if so, do things
-// otherwise, dont do those things
-setInterval(checkCollision, 10);
-//setInterval(rotateEnemies,  10);
+d3.timer(checkCollision);
 
 function rotateEnemies() {
   // select new angle for all the shurikens
@@ -137,24 +75,12 @@ function rotateEnemies() {
       return retStr;
     })
     ;
-  
-  // d3.selectAll('image').each(function(d, i) {
-  //     d.angle = d.angle+45;
-  //   });
-
-  // 
 }
 
-// we want to change value inside span inside div with class 'high'
-
 function checkCollision() {
-  // compare the player's position with any enemy's position.
-  // instead of using player.x and enemies[i].x
-  // we'll use d3 and use d.x and whatever else
   currScore++;
 
   d3.selectAll('image').each(function(d, i){
-    // if we're within a small distance, update highscore, curr score, nC
     var midx = myPlayer.x + .5 * myPlayer.size;
     var midy = myPlayer.y + .5 * myPlayer.size;
     
@@ -173,7 +99,7 @@ function checkCollision() {
             .transition()
             .duration(250)
             .style('background-color', 'black');
-          }); // good d3 practice: it changes the bg color and changes back to its original color!
+          }); 
       }
       if (currScore > highScore) {
         highScore = currScore;
